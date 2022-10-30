@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: ReplicaSet  
+metadata: 
+  name: replica-set
+  labels:
+    app: replica-set
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: replica-set
+  template:
+    metadata:
+      labels:
+        app: replica-set
+    spec:
+      containers: 
+      - name: bear
+        image: supergiantkir/animals:bear
+        ports: 
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /storage/c1
+          name: app-storage
+      - name: juice-shop
+        image: bkimminich/juice-shop
+        ports: 
+        - containerPort: 3000
+        volumeMounts:
+        - mountPath: /storage/c2
+          name: app-storage
+      volumes:
+        - name: app-storage
+          hostPath:
+            # directory location on host
+            path: /tmp/files
+            # this field is optional
+            type: DirectoryOrCreate	
